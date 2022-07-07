@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"reflect"
+	"sort"
 	"strings"
 	"time"
 
@@ -40,12 +41,21 @@ func resourceConfigBlockTree() *schema.Resource {
 			"configs": {
 				Description: "Key/Value map of config parameters. Value can be a jsonencode list",
 				Type:        schema.TypeMap,
-				DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool {
-					var oldConfig map[string]interface{}
-					json.Unmarshal([]byte(old), &oldConfig)
+				DiffSuppressFunc: func(k, old string, new string, d *schema.ResourceData) bool {
+					var oldConfig []string
+					err := json.Unmarshal([]byte(old), &oldConfig)
+					if err != nil {
+						return false
+					}
+					sort.Strings(oldConfig)
 
-					var newConfig map[string]interface{}
-					json.Unmarshal([]byte(new), &newConfig)
+					var newConfig []string
+					err = json.Unmarshal([]byte(new), &newConfig)
+					if err != nil {
+						return false
+					}
+					sort.Strings(newConfig)
+
 					return reflect.DeepEqual(oldConfig, newConfig)
 				},
 				Elem: &schema.Schema{
