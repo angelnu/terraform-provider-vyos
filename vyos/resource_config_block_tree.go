@@ -40,6 +40,14 @@ func resourceConfigBlockTree() *schema.Resource {
 			"configs": {
 				Description: "Key/Value map of config parameters. Value can be a jsonencode list",
 				Type:        schema.TypeMap,
+				DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool {
+					var oldConfig map[string]interface{}
+					json.Unmarshal([]byte(old), &oldConfig)
+
+					var newConfig map[string]interface{}
+					json.Unmarshal([]byte(new), &newConfig)
+					return reflect.DeepEqual(oldConfig, newConfig)
+				},
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
