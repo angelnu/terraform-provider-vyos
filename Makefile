@@ -1,5 +1,5 @@
 HOSTNAME=github.com
-NAMESPACE=foltik
+NAMESPACE=angelnu
 NAME=vyos
 BINARY=terraform-provider-${NAME}
 VERSION=0.3.1

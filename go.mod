@@ -1,4 +1,4 @@
-module github.com/foltik/terraform-provider-vyos
+module github.com/angelnu/terraform-provider-vyos
 
 go 1.23.7
 
